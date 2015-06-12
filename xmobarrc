@@ -13,7 +13,7 @@
 Config { 
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
-  font = "xft:Ubuntu Mono-14",
+  font = "xft:Ubuntu Mono-11",
   bgColor = "black",
   fgColor = "grey",
 
@@ -22,37 +22,56 @@ Config {
   -- of your screen to make it play nicely with stalonetray, which we
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
-  position = TopW L 95, 
+  position = TopW L 100, 
 
   -- list of commands which gather information about your system for
   -- presentation in the bar. 
   commands = [ 
     -- Gather and format CPU usage information. 
     -- If it's above 50%, we consider it high usage and make it red.  
-    Run Cpu [
-      "-H","50",
-      "--high","red"
+    Run MultiCpu [
+      "-t","Cpu: <total0><total1><total2><total3><total4><total5><total6><total7>",
+      "-L","30",
+      "-H","60",
+      "-h","#FFB6B0",
+      "-l","#CEFFAC",
+      "-n","#FFFFCC",
+      "-w","3"
     ] 10,
 
     -- Gather and format memory usage information
     Run Memory [
-      "-t","Mem: <usedratio>%"
+      "-t","Mem: <usedratio>%",
+      "-H","8192",
+      "-L","4096",
+      "-h","#FFB6B0",
+      "-l","#CEFFAC",
+      "-n","#FFFFCC"
+    ] 10,
+
+    Run Swap [
+      "-t","<usedratio>%",
+      "-H","1024",
+      "-L","512",
+      "-h","#FFB6B0",
+      "-l","#CEFFAC",
+      "-n","#FFFFCC"
+    ] 10,
+
+    Run Network "eth0" [
+      "-t", "<rx> <tx>",
+      "-L", "0",
+      "-H", "32",
+      "-n", "#FFFFCC",
+      "-h", "#FFB6B0",
+      "-l", "#CEFFAC"
     ] 10,
 
     -- Date formatting
     Run Date "%a %b %_d %l:%M" "date" 10,
 
-    -- Battery information. This is likely to require some customization
-    -- based upon your specific hardware. Or, for a desktop you may want
-    -- to just remove this section entirely.
-    Run Battery [
-      "-t", "<acstatus>: <left>%", 
-      "--", 
-      "-O", "AC",
-      "-o", "Bat",
-      "-h", "green",
-      "-l", "red"
-    ] 10,
+    -- Weather
+    Run Weather "KCHO" ["-t", "<tempF>F, <skyCondition>"] 3600,
 
     -- To get volume information, we run a custom bash script.
     -- This is because the built-in volume support in xmobar is disabled
@@ -73,5 +92,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %myvolume%    <fc=#e6744c>%date%</fc>     "
+   template = "%StdinReader% }{ %multicpu% | %memory% %swap% | Eth: %eth0% | Vol: %myvolume%    <fc=lightblue>%KCHO%</fc> | <fc=#e6744c>%date%</fc>             "
 }

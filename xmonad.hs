@@ -89,13 +89,13 @@ myUrgentWSRight = "}"
 
 myWorkspaces =
   [
-    "7:Chat",  "8:Dbg", "9:Pix",
-    "4:Docs",  "5:Dev", "6:Web",
-    "1:Term",  "2:Hub", "3:Mail",
-    "0:VM",    "Extr1", "Extr2"
+    "7",       "8",      "9",
+    "4:Chat",  "5:Mail", "6",
+    "1:Term",  "2:Web",  "3:Mail",
+    "0:VM",    "Extr1",  "Extr2"
   ]
 
-startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch?
+startupWorkspace = "1:Term"  -- which workspace do you want to be on after launch?
 
 {-
   Layout configuration. In this section we identify which xmonad
@@ -171,8 +171,8 @@ gimpLayout = smartBorders(avoidStruts(ThreeColMid 1 (3/100) (3/4)))
 -- Here we combine our default layouts with our specific, workspace-locked
 -- layouts.
 myLayouts =
-  onWorkspace "7:Chat" chatLayout
-  $ onWorkspace "9:Pix" gimpLayout
+  onWorkspace "4:Chat" chatLayout
+  $ onWorkspace "9" gimpLayout
   $ defaultLayouts
 
 
@@ -208,6 +208,9 @@ myKeyBindings =
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask .|. mod1Mask, xK_space), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
+    , ((myModMask .|. controlMask, xK_m), spawn "amixer -q set Master toggle & amixer set Front unmute & amixer set Headphone unmute")
+    , ((myModMask .|. controlMask, xK_k), spawn "amixer -q set Master 10%+")
+    , ((myModMask .|. controlMask, xK_j), spawn "amixer -q set Master 10%-")
     , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
     , ((0, 0x1008FF11), spawn "amixer -q set Master 10%-")
     , ((0, 0x1008FF13), spawn "amixer -q set Master 10%+")
@@ -262,13 +265,16 @@ myManagementHooks = [
   resource =? "synapse" --> doIgnore
   , resource =? "stalonetray" --> doIgnore
   , className =? "rdesktop" --> doFloat
-  , (className =? "Komodo IDE") --> doF (W.shift "5:Dev")
+  , className =? "Chromium-browser" --> doShift "2:Web"
+  , className =? "Thunderbird" --> doShift "5:Mail"
+  , className =? "Terminator" --> doShift "1:Term"
+  , (className =? "Komodo IDE") --> doF (W.shift "3:Dev")
   , (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
   , (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
   , (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
-  , (className =? "Empathy") --> doF (W.shift "7:Chat")
-  , (className =? "Pidgin") --> doF (W.shift "7:Chat")
-  , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
+  , (className =? "Empathy") --> doF (W.shift "4:Chat")
+  , (className =? "Pidgin") --> doF (W.shift "4:Chat")
+  , (className =? "Gimp-2.8") --> doF (W.shift "9")
   ]
 
 

@@ -37,15 +37,16 @@ xcompmgr -n &
 # connected screens and find out what names you should use to refer to them.
 
 # Activate primary screen 
-xrandr --output LVDS-1 --auto --primary
+xrandr --output DVI-I-1 --auto --left-of DVI-D-1
+# xrandr --output LVDS-1 --auto --primary
 
 # If we find that a screen is connected via VGA, activate it and position it
 # to the left of the primary screen.
-xrandr | grep 'VGA-1 connected' | ifne xrandr --output VGA-1 --auto --left-of LVDS-1
+# xrandr | grep 'VGA-1 connected' | ifne xrandr --output VGA-1 --auto --left-of LVDS-1
 
 # If we find that a screen is connected via DVI, activate it and position it
 # to the left of the primary screen.
-xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
+# xrandr | grep 'DP-1 connected' | ifne xrandr --output DP-1 --auto --left-of LVDS-1
 
 
 #
@@ -86,7 +87,7 @@ stalonetray \
   --max-geometry 5x1-0+0 \
   --background '#000000' \
   --skip-taskbar \
-  --icon-size 24 \
+  --icon-size 16 \
   --kludges force_icons_size \
   --window-strut none \
 &
@@ -100,6 +101,7 @@ gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh
 # Remap caps lock to left control. This is not strictly speaking
 # xmonad related, but it's handy if you're a vim user.
 setxkbmap -option 'ctrl:nocaps'
+xsetroot -cursor_name left_ptr
 
 # Now, finally, start xmonad
 exec xmonad
